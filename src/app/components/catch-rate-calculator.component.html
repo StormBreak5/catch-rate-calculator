@@ -132,13 +132,6 @@
       <mat-card-content>
         <div class="checkbox-group">
           <mat-checkbox 
-            *ngIf="shouldShowAdditionalModifier('isCriticalCapture')"
-            formControlName="isCriticalCapture"
-            [@checkboxAnimation]
-            matTooltip="Critical Capture increases catch rate significantly">
-            Critical Capture (Gen 5+)
-          </mat-checkbox>
-          <mat-checkbox 
             *ngIf="shouldShowAdditionalModifier('isFirstTurn')"
             formControlName="isFirstTurn"
             [@checkboxAnimation]

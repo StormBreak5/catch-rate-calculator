@@ -29,7 +29,6 @@ import { MatSliderModule } from '@angular/material/slider';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    // Angular Material modules
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,

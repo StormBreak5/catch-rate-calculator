@@ -11,27 +11,27 @@ export class CatchRateCalculatorService {
     ultraball: 2,
     masterball: 255,
     safariball: 1.5,
-    netball: 3, // vs Bug/Water types
-    diveball: 3.5, // underwater
-    nestball: 1, // varies by level
-    repeatball: 3, // if caught before
-    timerball: 1, // varies by turn
+    netball: 3,
+    diveball: 3.5,
+    nestball: 1,
+    repeatball: 3,
+    timerball: 1,
     luxuryball: 1,
     premierball: 1,
-    duskball: 3, // at night/caves
+    duskball: 3,
     healball: 1,
-    quickball: 5, // first turn only
+    quickball: 5,
     cherishball: 1,
-    fastball: 4, // vs fast Pokemon
-    levelball: 1, // varies by level difference
-    lureball: 3, // vs fishing
-    heavyball: 1, // varies by weight
-    loveball: 8, // vs opposite gender
+    fastball: 4,
+    levelball: 1,
+    lureball: 3,
+    heavyball: 1,
+    loveball: 8,
     friendball: 1,
-    moonball: 4, // vs Moon Stone evolution
+    moonball: 4,
     sportball: 1.5,
     dreamball: 1,
-    beastball: 5, // vs Ultra Beasts
+    beastball: 5,
   };
 
   private statusModifiers: { [key: string]: number } = {
@@ -167,7 +167,6 @@ export class CatchRateCalculatorService {
     const shakeChecks = Array(4)
       .fill(0)
       .map(() => Math.floor(Math.random() * 65536));
-    const shakeProbability = shakeChecks.filter((check) => check < b).length;
 
     const probability = a >= 255 ? 100 : Math.pow(b / 65536, 4) * 100;
 
@@ -180,14 +179,7 @@ export class CatchRateCalculatorService {
   }
 
   private calculateGen5To7(inputs: CalculatorInputs): CatchRateResult {
-    const {
-      pokemon,
-      ballType,
-      statusCondition,
-      currentHp,
-      maxHp,
-      isCriticalCapture,
-    } = inputs;
+    const { pokemon, ballType, statusCondition, currentHp, maxHp } = inputs;
 
     if (!pokemon) {
       return { catchRate: 0, probability: 0, shakeChecks: [], formula: '' };
@@ -210,11 +202,6 @@ export class CatchRateCalculatorService {
 
     if (a >= 255) {
       probability = 100;
-    } else if (isCriticalCapture) {
-      // Critical capture - only one shake check
-      const criticalThreshold = Math.floor(b / 6);
-      shakeChecks = [Math.floor(Math.random() * 65536)];
-      probability = (criticalThreshold / 65536) * 100;
     } else {
       // Normal capture - four shake checks
       shakeChecks = Array(4)
@@ -227,7 +214,7 @@ export class CatchRateCalculatorService {
       catchRate: a,
       probability,
       shakeChecks,
-      formula: `Generation V-VII: (((3×MaxHP - 2×CurrentHP) × Catch Rate × Ball × Status) / (3×MaxHP)) with critical capture`,
+      formula: `Generation V-VII: (((3×MaxHP - 2×CurrentHP) × Catch Rate × Ball × Status) / (3×MaxHP)) with shake checks`,
     };
   }
 
@@ -239,7 +226,6 @@ export class CatchRateCalculatorService {
       currentHp,
       maxHp,
       pokemonLevel,
-      isCriticalCapture,
       badgeCount,
     } = inputs;
 
@@ -250,19 +236,16 @@ export class CatchRateCalculatorService {
     const ballBonus = this.getBallModifier(ballType, inputs);
     const statusBonus = this.statusModifiers[statusCondition] || 1;
 
-    // Gen 8 introduces level-based bonus and difficulty factor
     const levelBonus = Math.max(1, (30 - pokemonLevel) / 10);
 
-    // Difficulty factor for Max Raids
     let difficultyFactor = 1;
     if (inputs.isMaxRaid) {
-      difficultyFactor = 2; // Max Raids are significantly harder
+      difficultyFactor = 2;
     }
 
-    // Badge penalty for high-level Pokémon
     let badgePenalty = 1;
     if (pokemonLevel > (badgeCount || 0) * 10 + 10) {
-      badgePenalty = 0.8; // Penalty for catching Pokémon above badge level
+      badgePenalty = 0.8;
     }
 
     const a = Math.floor(
@@ -282,11 +265,6 @@ export class CatchRateCalculatorService {
 
     if (a >= 255) {
       probability = 100;
-    } else if (isCriticalCapture) {
-      // Gen 8 critical capture has improved rates
-      const criticalThreshold = Math.floor(b / 4);
-      shakeChecks = [Math.floor(Math.random() * 65536)];
-      probability = (criticalThreshold / 65536) * 100;
     } else {
       shakeChecks = Array(4)
         .fill(0)
@@ -310,7 +288,6 @@ export class CatchRateCalculatorService {
       currentHp,
       maxHp,
       pokemonLevel,
-      isCriticalCapture,
       badgeCount,
     } = inputs;
 
@@ -321,24 +298,21 @@ export class CatchRateCalculatorService {
     const ballBonus = this.getBallModifier(ballType, inputs);
     const statusBonus = this.statusModifiers[statusCondition] || 1;
 
-    // Gen 9 level bonus formula (changed from Gen 8)
     const levelBonus = Math.max(1, (36 - 2 * pokemonLevel) / 10);
 
-    // Badge penalty is more severe in Gen 9
     let badgePenalty = 1;
-    const requiredBadges = Math.ceil(pokemonLevel / 13); // Rough approximation
+    const requiredBadges = Math.ceil(pokemonLevel / 13);
     if ((badgeCount || 0) < requiredBadges) {
       const n = requiredBadges - (badgeCount || 0);
-      badgePenalty = Math.pow(0.8, n); // Exponential penalty
+      badgePenalty = Math.pow(0.8, n);
     }
 
-    // Bonus for static encounters and back strikes
     let encounterBonus = 1;
     if (inputs.isStaticEncounter) {
-      encounterBonus *= 1.25; // 25% bonus for static encounters
+      encounterBonus *= 1.25;
     }
     if (inputs.isBackStrike) {
-      encounterBonus *= 2; // 2x bonus for back strikes
+      encounterBonus *= 2;
     }
 
     const a = Math.floor(
@@ -358,11 +332,6 @@ export class CatchRateCalculatorService {
 
     if (a >= 255) {
       probability = 100;
-    } else if (isCriticalCapture) {
-      // Gen 9 has the best critical capture rates
-      const criticalThreshold = Math.floor(b / 3);
-      shakeChecks = [Math.floor(Math.random() * 65536)];
-      probability = (criticalThreshold / 65536) * 100;
     } else {
       shakeChecks = Array(4)
         .fill(0)
@@ -384,7 +353,6 @@ export class CatchRateCalculatorService {
 
     if (!pokemon) return modifier;
 
-    // Special ball logic
     switch (ballType) {
       case 'nestball':
         // Nest Ball: mais efetivo contra Pokémon de nível baixo

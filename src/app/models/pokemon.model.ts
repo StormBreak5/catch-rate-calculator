@@ -35,7 +35,6 @@ export interface CalculatorInputs {
   currentHp: number;
   maxHp: number;
   pokemonLevel: number;
-  isCriticalCapture: boolean;
   isFirstTurn: boolean;
   isDarkGrass: boolean;
   badgeCount: number;

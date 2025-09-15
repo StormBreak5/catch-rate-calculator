@@ -26,7 +26,6 @@
   }
 }
 
-// Angular Material form field styles
 .full-width {
   width: 100%;
 }
@@ -601,13 +600,11 @@
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 }
-// A
-nimações e transições globais
+
 * {
   transition: all 0.3s ease;
 }
 
-// Melhorias nos cards do Angular Material
 .mat-card {
   border-radius: 16px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
@@ -619,7 +616,6 @@ nimações e transições globais
   }
 }
 
-// Melhorias nos botões
 .mat-raised-button {
   border-radius: 25px !important;
   font-weight: 600 !important;
@@ -632,7 +628,6 @@ nimações e transições globais
   }
 }
 
-// Melhorias nos form fields
 .mat-form-field-appearance-outline {
   .mat-form-field-outline {
     border-radius: 12px !important;
@@ -643,7 +638,6 @@ nimações e transições globais
   }
 }
 
-// Estilo para o autocomplete
 .mat-autocomplete-panel {
   border-radius: 12px !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
@@ -657,7 +651,6 @@ nimações e transições globais
   }
 }
 
-// Melhorias nos checkboxes
 .mat-checkbox {
   .mat-checkbox-frame {
     border-radius: 4px;
@@ -682,7 +675,6 @@ nimações e transições globais
   }
 }
 
-// Responsividade melhorada
 @media (max-width: 768px) {
   .calculator-container {
     padding: 15px;
@@ -710,7 +702,6 @@ nimações e transições globais
   }
 }
 
-// Melhorias no círculo de progresso
 .progress-circle {
   circle {
     transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -718,7 +709,6 @@ nimações e transições globais
   }
 }
 
-// Efeitos hover nos ícones
 mat-icon {
   transition: transform 0.2s ease, color 0.2s ease;
   
@@ -727,7 +717,6 @@ mat-icon {
   }
 }
 
-// Melhorias na seção de detalhes do resultado
 .result-details {
   .detail-item {
     padding: 12px 0;
@@ -748,13 +737,11 @@ mat-icon {
   }
 }
 
-// Melhorias na imagem do Pokémon selecionado
 .pokemon-image {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   transition: all 0.3s ease;
 }
 
-// Gradiente sutil no fundo
 .calculator-container {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   min-height: 100vh;

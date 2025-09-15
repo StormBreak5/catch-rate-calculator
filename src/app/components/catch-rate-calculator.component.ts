@@ -62,13 +62,13 @@ import {
 })
 export class CatchRateCalculatorComponent implements OnInit {
   calculatorForm: FormGroup;
-  Math = Math; // Expose Math object to template
+  Math = Math;
   pokemonList$: Observable<{ name: string; url: string }[]>;
   filteredPokemon$!: Observable<{ name: string; url: string }[]>;
   selectedPokemon: Pokemon | null = null;
   result: CatchRateResult | null = null;
   isLoading = false;
-  showSuggestions = false; // Controlar visibilidade das sugestões
+  showSuggestions = false;
 
   generations = [
     { value: 1, label: 'Generation I (Red/Blue/Yellow)' },
@@ -240,7 +240,6 @@ export class CatchRateCalculatorComponent implements OnInit {
         50,
         [Validators.required, Validators.min(1), Validators.max(100)],
       ],
-      isCriticalCapture: [false],
       isFirstTurn: [false],
       isDarkGrass: [false],
       badgeCount: [0, [Validators.min(0), Validators.max(8)]],
@@ -272,13 +271,13 @@ export class CatchRateCalculatorComponent implements OnInit {
           this.pokemonList$.pipe(
             map((pokemon) => {
               if (!value || value.length < 2) {
-                return []; // Não mostrar nada se menos de 2 caracteres
+                return [];
               }
               return pokemon
                 .filter((p) =>
                   p.name.toLowerCase().includes(value.toLowerCase())
                 )
-                .slice(0, 100); // Aumentar para 100 resultados
+                .slice(0, 100);
             })
           )
         )
@@ -293,7 +292,7 @@ export class CatchRateCalculatorComponent implements OnInit {
 
   onPokemonSelect(pokemonName: string) {
     this.isLoading = true;
-    this.showSuggestions = false; // Esconder sugestões após seleção
+    this.showSuggestions = false;
     this.pokemonService.getPokemon(pokemonName).subscribe((pokemon) => {
       this.selectedPokemon = pokemon;
       this.isLoading = false;
@@ -309,13 +308,11 @@ export class CatchRateCalculatorComponent implements OnInit {
   }
 
   onInputBlur() {
-    // Delay para permitir clique nas sugestões
     setTimeout(() => {
       this.showSuggestions = false;
     }, 200);
   }
 
-  // Verificar se deve mostrar campos específicos baseado na pokéball
   shouldShowBallSpecificField(fieldName: string): boolean {
     const ballType = this.calculatorForm.get('ballType')?.value;
 
@@ -347,14 +344,12 @@ export class CatchRateCalculatorComponent implements OnInit {
     const generation = this.calculatorForm.get('generation')?.value;
 
     switch (modifierName) {
-      case 'isCriticalCapture':
-        return generation >= 5; // Critical Capture só existe a partir da Gen 5
       case 'isFirstTurn':
         return ballType === 'quickball' || ballType === 'timerball';
       case 'isDarkGrass':
         return ballType === 'duskball';
       case 'badgeCount':
-        return generation >= 8; // Badge penalties são mais relevantes em Gen 8+
+        return generation >= 8;
       default:
         return true;
     }
@@ -372,7 +367,6 @@ export class CatchRateCalculatorComponent implements OnInit {
       currentHp: formValue.currentHp,
       maxHp: formValue.maxHp,
       pokemonLevel: formValue.pokemonLevel,
-      isCriticalCapture: formValue.isCriticalCapture,
       isFirstTurn: formValue.isFirstTurn,
       isDarkGrass: formValue.isDarkGrass,
       badgeCount: formValue.badgeCount,
@@ -431,7 +425,7 @@ export class CatchRateCalculatorComponent implements OnInit {
   }
 
   getProgressCircleStyle(probability: number): any {
-    const circumference = 2 * Math.PI * 65; // raio de 65px
+    const circumference = 2 * Math.PI * 65;
     const strokeDasharray = circumference;
     const strokeDashoffset =
       circumference - (probability / 100) * circumference;

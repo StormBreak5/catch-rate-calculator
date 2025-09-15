@@ -46,7 +46,6 @@ export class PokemonService {
           'blacephalon',
         ];
 
-        // Extrair stats
         const stats = {
           hp: pokemon.stats[0].base_stat,
           attack: pokemon.stats[1].base_stat,
@@ -62,7 +61,7 @@ export class PokemonService {
           captureRate: species.capture_rate,
           types: types,
           isUltraBeast: ultraBeasts.includes(pokemon.name.toLowerCase()),
-          weight: pokemon.weight, // em hectogramas
+          weight: pokemon.weight,
           stats: stats,
           sprites: pokemon.sprites,
         };
