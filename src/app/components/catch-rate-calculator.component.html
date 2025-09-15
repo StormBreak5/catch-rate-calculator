@@ -55,11 +55,17 @@
       <!-- Ball Type -->
       <div class="form-group">
         <label for="ballType">Poké Ball:</label>
-        <select id="ballType" formControlName="ballType" class="form-control">
-          <option *ngFor="let ball of pokeballs" [value]="ball.value">
-            {{ ball.label }}
-          </option>
-        </select>
+        <div class="ball-selector">
+          <img [src]="getSelectedBallIcon()" 
+               [alt]="calculatorForm.get('ballType')?.value" 
+               class="ball-icon"
+               *ngIf="getSelectedBallIcon()">
+          <select id="ballType" formControlName="ballType" class="form-control ball-select">
+            <option *ngFor="let ball of pokeballs" [value]="ball.value">
+              {{ ball.label }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -188,6 +194,34 @@
                  min="1" max="30" class="form-control">
           <small class="form-text">Timer Ball effectiveness increases with turns (max at turn 10 for Gen 5+, turn 30 for Gen 3-4)</small>
         </div>
+
+        <!-- Generation 8 Specific Fields -->
+        <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen8Fields')">
+          <h5>Generation VIII Specific</h5>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isMaxRaid">
+              Max Raid Battle (different difficulty mechanics)
+            </label>
+          </div>
+        </div>
+
+        <!-- Generation 9 Specific Fields -->
+        <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen9Fields')">
+          <h5>Generation IX Specific</h5>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isStaticEncounter">
+              Static Encounter (bonus multiplier)
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isBackStrike">
+              Back Strike (bonus multiplier)
+            </label>
+          </div>
+        </div>
       </div>
 
       <!-- Informações sobre o Pokémon selecionado -->
@@ -211,10 +245,11 @@
         </div>
       </div>
       
-      <div class="form-group">
-        <label for="badgeCount">Badge Count (affects some calculations):</label>
+      <div class="form-group" *ngIf="shouldShowAdditionalModifier('badgeCount')">
+        <label for="badgeCount">Badge Count (affects Gen 8+ calculations):</label>
         <input type="number" id="badgeCount" formControlName="badgeCount" 
                min="0" max="8" class="form-control">
+        <small class="form-text">Higher level Pokémon are harder to catch without sufficient badges</small>
       </div>
     </div>
   </form>
@@ -232,6 +267,16 @@
       </div>
       
       <div class="result-details">
+        <div class="detail-item">
+          <span class="label">Poké Ball Used:</span>
+          <span class="value ball-used">
+            <img [src]="getSelectedBallIcon()" 
+                 [alt]="calculatorForm.get('ballType')?.value" 
+                 class="result-ball-icon"
+                 *ngIf="getSelectedBallIcon()">
+            {{ getSelectedBallLabel() }}
+          </span>
+        </div>
         <div class="detail-item">
           <span class="label">Modified Catch Rate:</span>
           <span class="value">{{ result.catchRate }}</span>

@@ -47,6 +47,10 @@ export interface CalculatorInputs {
   isFishing?: boolean; // Para Lure Ball
   playerLevel?: number; // Para Level Ball
   turnsPassed?: number; // Para Timer Ball
+  // Campos específicos para Gen 8+
+  isMaxRaid?: boolean; // Para Gen 8 Max Raids
+  isStaticEncounter?: boolean; // Para Gen 9 Static Encounters
+  isBackStrike?: boolean; // Para Gen 9 Back Strikes
 }
 
 export interface CatchRateResult {

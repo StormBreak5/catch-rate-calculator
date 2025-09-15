@@ -44,32 +44,136 @@ export class CatchRateCalculatorComponent implements OnInit {
   ];
 
   pokeballs = [
-    { value: 'pokeball', label: 'Poké Ball' },
-    { value: 'greatball', label: 'Great Ball' },
-    { value: 'ultraball', label: 'Ultra Ball' },
-    { value: 'masterball', label: 'Master Ball' },
-    { value: 'safariball', label: 'Safari Ball' },
-    { value: 'netball', label: 'Net Ball' },
-    { value: 'diveball', label: 'Dive Ball' },
-    { value: 'nestball', label: 'Nest Ball' },
-    { value: 'repeatball', label: 'Repeat Ball' },
-    { value: 'timerball', label: 'Timer Ball' },
-    { value: 'luxuryball', label: 'Luxury Ball' },
-    { value: 'premierball', label: 'Premier Ball' },
-    { value: 'duskball', label: 'Dusk Ball' },
-    { value: 'healball', label: 'Heal Ball' },
-    { value: 'quickball', label: 'Quick Ball' },
-    { value: 'cherishball', label: 'Cherish Ball' },
-    { value: 'fastball', label: 'Fast Ball' },
-    { value: 'levelball', label: 'Level Ball' },
-    { value: 'lureball', label: 'Lure Ball' },
-    { value: 'heavyball', label: 'Heavy Ball' },
-    { value: 'loveball', label: 'Love Ball' },
-    { value: 'friendball', label: 'Friend Ball' },
-    { value: 'moonball', label: 'Moon Ball' },
-    { value: 'sportball', label: 'Sport Ball' },
-    { value: 'dreamball', label: 'Dream Ball' },
-    { value: 'beastball', label: 'Beast Ball' },
+    {
+      value: 'pokeball',
+      label: 'Poké Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png',
+    },
+    {
+      value: 'greatball',
+      label: 'Great Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png',
+    },
+    {
+      value: 'ultraball',
+      label: 'Ultra Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png',
+    },
+    {
+      value: 'masterball',
+      label: 'Master Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png',
+    },
+    {
+      value: 'safariball',
+      label: 'Safari Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/safari-ball.png',
+    },
+    {
+      value: 'netball',
+      label: 'Net Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/net-ball.png',
+    },
+    {
+      value: 'diveball',
+      label: 'Dive Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dive-ball.png',
+    },
+    {
+      value: 'nestball',
+      label: 'Nest Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/nest-ball.png',
+    },
+    {
+      value: 'repeatball',
+      label: 'Repeat Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/repeat-ball.png',
+    },
+    {
+      value: 'timerball',
+      label: 'Timer Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/timer-ball.png',
+    },
+    {
+      value: 'luxuryball',
+      label: 'Luxury Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png',
+    },
+    {
+      value: 'premierball',
+      label: 'Premier Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/premier-ball.png',
+    },
+    {
+      value: 'duskball',
+      label: 'Dusk Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dusk-ball.png',
+    },
+    {
+      value: 'healball',
+      label: 'Heal Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heal-ball.png',
+    },
+    {
+      value: 'quickball',
+      label: 'Quick Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-ball.png',
+    },
+    {
+      value: 'cherishball',
+      label: 'Cherish Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cherish-ball.png',
+    },
+    {
+      value: 'fastball',
+      label: 'Fast Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fast-ball.png',
+    },
+    {
+      value: 'levelball',
+      label: 'Level Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/level-ball.png',
+    },
+    {
+      value: 'lureball',
+      label: 'Lure Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lure-ball.png',
+    },
+    {
+      value: 'heavyball',
+      label: 'Heavy Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heavy-ball.png',
+    },
+    {
+      value: 'loveball',
+      label: 'Love Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/love-ball.png',
+    },
+    {
+      value: 'friendball',
+      label: 'Friend Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/friend-ball.png',
+    },
+    {
+      value: 'moonball',
+      label: 'Moon Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-ball.png',
+    },
+    {
+      value: 'sportball',
+      label: 'Sport Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sport-ball.png',
+    },
+    {
+      value: 'dreamball',
+      label: 'Dream Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dream-ball.png',
+    },
+    {
+      value: 'beastball',
+      label: 'Beast Ball',
+      icon: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/beast-ball.png',
+    },
   ];
 
   statusConditions = [
@@ -109,6 +213,10 @@ export class CatchRateCalculatorComponent implements OnInit {
       isFishing: [false],
       playerLevel: [50, [Validators.min(1), Validators.max(100)]],
       turnsPassed: [1, [Validators.min(1), Validators.max(30)]],
+      // Campos específicos para Gen 8+
+      isMaxRaid: [false],
+      isStaticEncounter: [false],
+      isBackStrike: [false],
     });
 
     this.pokemonList$ = this.pokemonService.getPokemonList();
@@ -185,6 +293,10 @@ export class CatchRateCalculatorComponent implements OnInit {
         return ballType === 'levelball';
       case 'turnsPassed':
         return ballType === 'timerball';
+      case 'gen8Fields':
+        return this.calculatorForm.get('generation')?.value === 8;
+      case 'gen9Fields':
+        return this.calculatorForm.get('generation')?.value === 9;
       default:
         return false;
     }
@@ -202,6 +314,8 @@ export class CatchRateCalculatorComponent implements OnInit {
         return ballType === 'quickball' || ballType === 'timerball';
       case 'isDarkGrass':
         return ballType === 'duskball';
+      case 'badgeCount':
+        return generation >= 8; // Badge penalties são mais relevantes em Gen 8+
       default:
         return true;
     }
@@ -231,6 +345,10 @@ export class CatchRateCalculatorComponent implements OnInit {
       isFishing: formValue.isFishing,
       playerLevel: formValue.playerLevel,
       turnsPassed: formValue.turnsPassed,
+      // Campos Gen 8+
+      isMaxRaid: formValue.isMaxRaid,
+      isStaticEncounter: formValue.isStaticEncounter,
+      isBackStrike: formValue.isBackStrike,
     };
 
     this.result = this.calculatorService.calculateCatchRate(inputs);
@@ -255,5 +373,21 @@ export class CatchRateCalculatorComponent implements OnInit {
     if (probability >= 50) return '#FFC107';
     if (probability >= 30) return '#FF9800';
     return '#F44336';
+  }
+
+  getSelectedBallIcon(): string {
+    const selectedBallType = this.calculatorForm.get('ballType')?.value;
+    const selectedBall = this.pokeballs.find(
+      (ball) => ball.value === selectedBallType
+    );
+    return selectedBall?.icon || '';
+  }
+
+  getSelectedBallLabel(): string {
+    const selectedBallType = this.calculatorForm.get('ballType')?.value;
+    const selectedBall = this.pokeballs.find(
+      (ball) => ball.value === selectedBallType
+    );
+    return selectedBall?.label || '';
   }
 }

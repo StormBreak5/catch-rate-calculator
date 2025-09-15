@@ -414,3 +414,91 @@
     line-height: 1.3;
   }
 }
+
+.gen-specific-fields {
+  background: #e8f4fd;
+  border: 1px solid #bee5eb;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+
+  h5 {
+    margin: 0 0 10px 0;
+    color: #0c5460;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .checkbox-label {
+    color: #0c5460;
+  }
+}
+
+.ball-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: border-color 0.3s ease;
+
+  &:focus-within {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .ball-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .ball-select {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    color: #34495e;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    option {
+      padding: 8px;
+      background: white;
+      color: #34495e;
+    }
+  }
+}
+
+.ball-used {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+
+  .result-ball-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+}

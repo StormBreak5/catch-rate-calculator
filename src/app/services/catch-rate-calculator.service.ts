@@ -48,7 +48,7 @@ export class CatchRateCalculatorService {
       return { catchRate: 0, probability: 0, shakeChecks: [], formula: '' };
     }
 
-    switch (inputs.generation) {
+    switch (Number(inputs.generation)) {
       case 1:
         return this.calculateGen1(inputs);
       case 2:
@@ -238,7 +238,9 @@ export class CatchRateCalculatorService {
       statusCondition,
       currentHp,
       maxHp,
+      pokemonLevel,
       isCriticalCapture,
+      badgeCount,
     } = inputs;
 
     if (!pokemon) {
@@ -248,12 +250,29 @@ export class CatchRateCalculatorService {
     const ballBonus = this.getBallModifier(ballType, inputs);
     const statusBonus = this.statusModifiers[statusCondition] || 1;
 
-    // Gen 8 has slight modifications to critical capture rates
+    // Gen 8 introduces level-based bonus and difficulty factor
+    const levelBonus = Math.max(1, (30 - pokemonLevel) / 10);
+
+    // Difficulty factor for Max Raids
+    let difficultyFactor = 1;
+    if (inputs.isMaxRaid) {
+      difficultyFactor = 2; // Max Raids are significantly harder
+    }
+
+    // Badge penalty for high-level Pokémon
+    let badgePenalty = 1;
+    if (pokemonLevel > (badgeCount || 0) * 10 + 10) {
+      badgePenalty = 0.8; // Penalty for catching Pokémon above badge level
+    }
+
     const a = Math.floor(
       ((3 * maxHp - 2 * currentHp) *
         pokemon.captureRate *
         ballBonus *
-        statusBonus) /
+        statusBonus *
+        levelBonus *
+        difficultyFactor *
+        badgePenalty) /
         (3 * maxHp)
     );
     const b = Math.floor(65536 / Math.pow(255 / a, 0.1875));
@@ -265,7 +284,7 @@ export class CatchRateCalculatorService {
       probability = 100;
     } else if (isCriticalCapture) {
       // Gen 8 critical capture has improved rates
-      const criticalThreshold = Math.floor(b / 4); // Melhor que Gen 5-7
+      const criticalThreshold = Math.floor(b / 4);
       shakeChecks = [Math.floor(Math.random() * 65536)];
       probability = (criticalThreshold / 65536) * 100;
     } else {
@@ -279,7 +298,7 @@ export class CatchRateCalculatorService {
       catchRate: a,
       probability,
       shakeChecks,
-      formula: `Generation VIII: (((3×MaxHP - 2×CurrentHP) × Catch Rate × Ball × Status) / (3×MaxHP)) with improved critical capture`,
+      formula: `Generation VIII: Base formula × Level Bonus × Difficulty × Badge Penalty with improved mechanics`,
     };
   }
 
@@ -290,7 +309,9 @@ export class CatchRateCalculatorService {
       statusCondition,
       currentHp,
       maxHp,
+      pokemonLevel,
       isCriticalCapture,
+      badgeCount,
     } = inputs;
 
     if (!pokemon) {
@@ -300,12 +321,34 @@ export class CatchRateCalculatorService {
     const ballBonus = this.getBallModifier(ballType, inputs);
     const statusBonus = this.statusModifiers[statusCondition] || 1;
 
-    // Gen 9 has further improvements and some new mechanics
+    // Gen 9 level bonus formula (changed from Gen 8)
+    const levelBonus = Math.max(1, (36 - 2 * pokemonLevel) / 10);
+
+    // Badge penalty is more severe in Gen 9
+    let badgePenalty = 1;
+    const requiredBadges = Math.ceil(pokemonLevel / 13); // Rough approximation
+    if ((badgeCount || 0) < requiredBadges) {
+      const n = requiredBadges - (badgeCount || 0);
+      badgePenalty = Math.pow(0.8, n); // Exponential penalty
+    }
+
+    // Bonus for static encounters and back strikes
+    let encounterBonus = 1;
+    if (inputs.isStaticEncounter) {
+      encounterBonus *= 1.25; // 25% bonus for static encounters
+    }
+    if (inputs.isBackStrike) {
+      encounterBonus *= 2; // 2x bonus for back strikes
+    }
+
     const a = Math.floor(
       ((3 * maxHp - 2 * currentHp) *
         pokemon.captureRate *
         ballBonus *
-        statusBonus) /
+        statusBonus *
+        levelBonus *
+        badgePenalty *
+        encounterBonus) /
         (3 * maxHp)
     );
     const b = Math.floor(65536 / Math.pow(255 / a, 0.1875));
@@ -317,7 +360,7 @@ export class CatchRateCalculatorService {
       probability = 100;
     } else if (isCriticalCapture) {
       // Gen 9 has the best critical capture rates
-      const criticalThreshold = Math.floor(b / 3); // Ainda melhor que Gen 8
+      const criticalThreshold = Math.floor(b / 3);
       shakeChecks = [Math.floor(Math.random() * 65536)];
       probability = (criticalThreshold / 65536) * 100;
     } else {
@@ -331,7 +374,7 @@ export class CatchRateCalculatorService {
       catchRate: a,
       probability,
       shakeChecks,
-      formula: `Generation IX: (((3×MaxHP - 2×CurrentHP) × Catch Rate × Ball × Status) / (3×MaxHP)) with enhanced critical capture`,
+      formula: `Generation IX: Base formula × Level Bonus × Badge Penalty × Encounter Bonus with enhanced mechanics`,
     };
   }
 
