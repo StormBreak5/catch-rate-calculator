@@ -8,6 +8,13 @@ import {
   startWith,
   map,
 } from 'rxjs';
+import {
+  trigger,
+  style,
+  transition,
+  animate,
+  keyframes,
+} from '@angular/animations';
 import { PokemonService } from '../services/pokemon.service';
 import { CatchRateCalculatorService } from '../services/catch-rate-calculator.service';
 import {
@@ -20,6 +27,38 @@ import {
   selector: 'app-catch-rate-calculator',
   templateUrl: './catch-rate-calculator.component.html',
   styleUrls: ['./catch-rate-calculator.component.scss'],
+  animations: [
+    trigger('checkboxAnimation', [
+      transition(':enter', [
+        animate(
+          '0.3s ease-in',
+          keyframes([
+            style({ transform: 'scale(0)', opacity: 0, offset: 0 }),
+            style({ transform: 'scale(1.2)', opacity: 0.8, offset: 0.7 }),
+            style({ transform: 'scale(1)', opacity: 1, offset: 1 }),
+          ])
+        ),
+      ]),
+    ]),
+    trigger('slideIn', [
+      transition(':enter', [
+        style({ transform: 'translateY(-20px)', opacity: 0 }),
+        animate(
+          '0.4s ease-out',
+          style({ transform: 'translateY(0)', opacity: 1 })
+        ),
+      ]),
+    ]),
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('0.5s ease-in', style({ opacity: 1 })),
+      ]),
+    ]),
+    trigger('progressAnimation', [
+      transition('* => *', [animate('1s ease-out')]),
+    ]),
+  ],
 })
 export class CatchRateCalculatorComponent implements OnInit {
   calculatorForm: FormGroup;
@@ -389,5 +428,31 @@ export class CatchRateCalculatorComponent implements OnInit {
       (ball) => ball.value === selectedBallType
     );
     return selectedBall?.label || '';
+  }
+
+  getProgressCircleStyle(probability: number): any {
+    const circumference = 2 * Math.PI * 65; // raio de 65px
+    const strokeDasharray = circumference;
+    const strokeDashoffset =
+      circumference - (probability / 100) * circumference;
+
+    return {
+      'stroke-dasharray': strokeDasharray,
+      'stroke-dashoffset': strokeDashoffset,
+      stroke: this.getProbabilityColor(probability),
+      transition: 'stroke-dashoffset 1s ease-out, stroke 0.5s ease',
+    };
+  }
+
+  getProgressBackgroundStyle(): any {
+    const circumference = 2 * Math.PI * 65;
+    return {
+      'stroke-dasharray': circumference,
+      'stroke-dashoffset': 0,
+    };
+  }
+
+  displayPokemon(pokemon: any): string {
+    return pokemon ? pokemon : '';
   }
 }

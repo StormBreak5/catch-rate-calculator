@@ -1,48 +1,59 @@
 .calculator-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
   h1 {
     text-align: center;
     color: #2c3e50;
     margin-bottom: 30px;
     font-size: 2.5rem;
+    font-weight: 300;
+    background: linear-gradient(45deg, #3f51b5, #2196f3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
 .calculator-form {
-  background: #f8f9fa;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
+  
+  .mat-card {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+  }
 }
 
-.form-group {
-  margin-bottom: 20px;
+// Angular Material form field styles
+.full-width {
+  width: 100%;
+}
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #34495e;
-  }
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
 
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 8px;
+}
 
-    &:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
+.selected-ball-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.ball-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .ball-icon-small {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -144,17 +155,26 @@
 .selected-pokemon {
   display: flex;
   align-items: center;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
   margin: 20px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
 
   .pokemon-image {
     width: 120px;
     height: 120px;
     margin-right: 20px;
     object-fit: contain;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   .pokemon-info {
@@ -162,6 +182,7 @@
       margin: 0 0 10px 0;
       color: #2c3e50;
       font-size: 1.5rem;
+      font-weight: 500;
     }
 
     p {
@@ -173,14 +194,20 @@
 }
 
 .hp-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
   margin: 20px 0;
-
-  h3 {
-    margin-top: 0;
-    color: #e74c3c;
+  border-radius: 16px;
+  
+  .mat-card-header {
+    .mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e74c3c;
+      
+      mat-icon {
+        color: #e74c3c;
+      }
+    }
   }
 }
 
@@ -190,63 +217,75 @@
   flex-wrap: wrap;
   margin-top: 15px;
 
-  .hp-btn {
-    padding: 8px 16px;
-    border: 2px solid #e74c3c;
-    background: white;
-    color: #e74c3c;
+  .mat-raised-button {
     border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
     font-weight: 600;
-
-    &:hover, &.active {
-      background: #e74c3c;
-      color: white;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    &.active {
+      transform: scale(1.05);
     }
   }
 }
 
 .additional-options {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
   margin: 20px 0;
-
-  h3 {
-    margin-top: 0;
-    color: #9b59b6;
+  border-radius: 16px;
+  
+  .mat-card-header {
+    .mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #9b59b6;
+      
+      mat-icon {
+        color: #9b59b6;
+      }
+    }
   }
 }
 
 .checkbox-group {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 15px;
   margin-bottom: 20px;
 
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    input[type="checkbox"] {
-      margin-right: 10px;
-      transform: scale(1.2);
+  .mat-checkbox {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateX(4px);
+    }
+    
+    .mat-checkbox-label {
+      font-size: 14px;
+      line-height: 1.4;
     }
   }
 }
 
 .results {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  h2 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  
+  .mat-card-header {
+    .mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #2c3e50;
+      
+      mat-icon {
+        color: #2196f3;
+      }
+    }
   }
 }
 
@@ -267,26 +306,37 @@
   display: flex;
   justify-content: center;
 
-  .probability-circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 8px solid currentColor;
+  .progress-circle-container {
+    position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-
-    .percentage {
-      font-size: 2rem;
-      font-weight: bold;
-      line-height: 1;
+    
+    .progress-circle {
+      transform: rotate(-90deg);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     }
+    
+    .percentage-text {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      
+      .percentage {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-    .label {
-      font-size: 0.9rem;
-      margin-top: 5px;
+      .label {
+        font-size: 0.9rem;
+        margin-top: 4px;
+        opacity: 0.8;
+        font-weight: 500;
+      }
     }
   }
 }
@@ -327,34 +377,72 @@
 }
 
 .interpretation {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
-
-  h3 {
-    margin-top: 0;
-    color: #2c3e50;
+  border-radius: 16px;
+  margin-top: 20px;
+  
+  .mat-card-header {
+    .mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #2c3e50;
+      
+      mat-icon {
+        color: #ffc107;
+      }
+    }
   }
 
   p {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-    &.success { color: #27ae60; }
-    &.good { color: #2ecc71; }
-    &.moderate { color: #f39c12; }
-    &.low { color: #e67e22; }
-    &.very-low { color: #e74c3c; }
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.success { 
+      color: #27ae60;
+      mat-icon { color: #27ae60; }
+    }
+    &.good { 
+      color: #2ecc71;
+      mat-icon { color: #2ecc71; }
+    }
+    &.moderate { 
+      color: #f39c12;
+      mat-icon { color: #f39c12; }
+    }
+    &.low { 
+      color: #e67e22;
+      mat-icon { color: #e67e22; }
+    }
+    &.very-low { 
+      color: #e74c3c;
+      mat-icon { color: #e74c3c; }
+    }
   }
 }
 
 .loading {
   text-align: center;
   padding: 40px;
-  font-size: 1.2rem;
-  color: #7f8c8d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  
+  p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin: 0;
+  }
 }
 
 .ball-specific-fields {
@@ -419,18 +507,29 @@
   background: #e8f4fd;
   border: 1px solid #bee5eb;
   border-radius: 8px;
-  padding: 15px;
-  margin: 15px 0;
+  padding: 20px;
+  margin: 20px 0;
 
   h5 {
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
     color: #0c5460;
     font-size: 1rem;
     font-weight: 600;
   }
 
   .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .mat-checkbox {
+    margin-bottom: 12px;
+    display: block;
+    
+    .mat-checkbox-label {
+      font-size: 14px;
+      line-height: 1.5;
+      padding-left: 8px;
+    }
   }
 
   .checkbox-label {
@@ -501,4 +600,164 @@
     object-fit: contain;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
+}
+// A
+nimações e transições globais
+* {
+  transition: all 0.3s ease;
+}
+
+// Melhorias nos cards do Angular Material
+.mat-card {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+// Melhorias nos botões
+.mat-raised-button {
+  border-radius: 25px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15) !important;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+// Melhorias nos form fields
+.mat-form-field-appearance-outline {
+  .mat-form-field-outline {
+    border-radius: 12px !important;
+  }
+  
+  &.mat-focused .mat-form-field-outline-thick {
+    border-width: 2px !important;
+  }
+}
+
+// Estilo para o autocomplete
+.mat-autocomplete-panel {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  
+  .mat-option {
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(63, 81, 181, 0.1) !important;
+    }
+  }
+}
+
+// Melhorias nos checkboxes
+.mat-checkbox {
+  .mat-checkbox-frame {
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  &.mat-checkbox-checked .mat-checkbox-background {
+    border-radius: 4px;
+    animation: checkboxPulse 0.4s ease;
+  }
+}
+
+@keyframes checkboxPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Responsividade melhorada
+@media (max-width: 768px) {
+  .calculator-container {
+    padding: 15px;
+    
+    h1 {
+      font-size: 2rem;
+    }
+  }
+  
+  .result-card {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+  
+  .probability-display {
+    margin-bottom: 20px;
+  }
+  
+  .hp-buttons {
+    justify-content: center;
+  }
+  
+  .checkbox-group {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+// Melhorias no círculo de progresso
+.progress-circle {
+  circle {
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                stroke 0.6s ease;
+  }
+}
+
+// Efeitos hover nos ícones
+mat-icon {
+  transition: transform 0.2s ease, color 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Melhorias na seção de detalhes do resultado
+.result-details {
+  .detail-item {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    transition: background-color 0.2s ease;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
+    
+    &:hover {
+      background-color: rgba(63, 81, 181, 0.04);
+    }
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Melhorias na imagem do Pokémon selecionado
+.pokemon-image {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+}
+
+// Gradiente sutil no fundo
+.calculator-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }

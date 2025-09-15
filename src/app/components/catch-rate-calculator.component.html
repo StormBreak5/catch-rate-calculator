@@ -1,321 +1,378 @@
 <div class="calculator-container">
   <h1>Pokémon Catch Rate Calculator</h1>
   
-  <form [formGroup]="calculatorForm" class="calculator-form">
-    <!-- Pokemon Selection -->
-    <div class="form-group">
-      <label for="pokemonName">Select Pokémon:</label>
-      <input 
-        type="text" 
-        id="pokemonName"
-        formControlName="pokemonName"
-        placeholder="Type Pokémon name..."
-        class="form-control"
-        (input)="selectedPokemon = null; result = null; showSuggestions = true"
-        (focus)="onInputFocus()"
-        (blur)="onInputBlur()">
-      
-      <div class="pokemon-suggestions" *ngIf="showSuggestions && (filteredPokemon$ | async) as suggestions">
-        <div class="suggestions-header" *ngIf="suggestions.length > 0">
-          Mostrando {{ suggestions.length }} Pokémon
+  <form [formGroup]="calculatorForm">
+    <mat-card class="calculator-form" [@slideIn]>
+      <mat-card-content>
+        <!-- Pokemon Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Pokémon</mat-label>
+          <input 
+            matInput
+            formControlName="pokemonName"
+            placeholder="Type Pokémon name..."
+            [matAutocomplete]="auto"
+            (input)="selectedPokemon = null; result = null; showSuggestions = true"
+            (focus)="onInputFocus()"
+            (blur)="onInputBlur()">
+          <mat-icon matSuffix>search</mat-icon>
+          
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPokemon">
+            <mat-option 
+              *ngFor="let pokemon of filteredPokemon$ | async" 
+              [value]="pokemon.name"
+              (onSelectionChange)="onPokemonSelect(pokemon.name)">
+              {{ pokemon.name | titlecase }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Selected Pokemon Display -->
+        <mat-card class="selected-pokemon" *ngIf="selectedPokemon" [@fadeIn]>
+          <img [src]="selectedPokemon.sprites.other['official-artwork'].front_default || selectedPokemon.sprites.front_default" 
+               [alt]="selectedPokemon.name" class="pokemon-image">
+          <div class="pokemon-info">
+            <h3>{{ selectedPokemon.name | titlecase }}</h3>
+            <p>Base Catch Rate: {{ selectedPokemon.captureRate }}</p>
+          </div>
+        </mat-card>
+
+        <div class="form-row">
+          <!-- Generation -->
+          <mat-form-field appearance="outline">
+            <mat-label>Game Generation</mat-label>
+            <mat-select formControlName="generation">
+              <mat-option *ngFor="let gen of generations" [value]="gen.value">
+                {{ gen.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Ball Type -->
+          <mat-form-field appearance="outline">
+            <mat-label>Poké Ball</mat-label>
+            <mat-select formControlName="ballType">
+              <mat-option *ngFor="let ball of pokeballs" [value]="ball.value">
+                <div class="ball-option">
+                  <img [src]="ball.icon" [alt]="ball.label" class="ball-icon-small">
+                  {{ ball.label }}
+                </div>
+              </mat-option>
+            </mat-select>
+            <img matPrefix [src]="getSelectedBallIcon()" 
+                 [alt]="calculatorForm.get('ballType')?.value" 
+                 class="selected-ball-icon"
+                 *ngIf="getSelectedBallIcon()">
+          </mat-form-field>
         </div>
-        <div 
-          *ngFor="let pokemon of suggestions" 
-          class="suggestion-item"
-          (click)="onPokemonSelect(pokemon.name); calculatorForm.patchValue({pokemonName: pokemon.name})">
-          {{ pokemon.name | titlecase }}
+
+        <div class="form-row">
+          <!-- Status Condition -->
+          <mat-form-field appearance="outline">
+            <mat-label>Status Condition</mat-label>
+            <mat-select formControlName="statusCondition">
+              <mat-option *ngFor="let status of statusConditions" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Pokemon Level -->
+          <mat-form-field appearance="outline">
+            <mat-label>Pokémon Level</mat-label>
+            <input matInput type="number" formControlName="pokemonLevel" min="1" max="100">
+          </mat-form-field>
         </div>
-        <div class="no-results" *ngIf="suggestions.length === 0 && calculatorForm.get('pokemonName')?.value">
-          Nenhum Pokémon encontrado
-        </div>
-      </div>
-    </div>
-
-    <!-- Selected Pokemon Display -->
-    <div class="selected-pokemon" *ngIf="selectedPokemon">
-      <img [src]="selectedPokemon.sprites.other['official-artwork'].front_default || selectedPokemon.sprites.front_default" 
-           [alt]="selectedPokemon.name" class="pokemon-image">
-      <div class="pokemon-info">
-        <h3>{{ selectedPokemon.name | titlecase }}</h3>
-        <p>Base Catch Rate: {{ selectedPokemon.captureRate }}</p>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <!-- Generation -->
-      <div class="form-group">
-        <label for="generation">Game Generation:</label>
-        <select id="generation" formControlName="generation" class="form-control">
-          <option *ngFor="let gen of generations" [value]="gen.value">
-            {{ gen.label }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Ball Type -->
-      <div class="form-group">
-        <label for="ballType">Poké Ball:</label>
-        <div class="ball-selector">
-          <img [src]="getSelectedBallIcon()" 
-               [alt]="calculatorForm.get('ballType')?.value" 
-               class="ball-icon"
-               *ngIf="getSelectedBallIcon()">
-          <select id="ballType" formControlName="ballType" class="form-control ball-select">
-            <option *ngFor="let ball of pokeballs" [value]="ball.value">
-              {{ ball.label }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <!-- Status Condition -->
-      <div class="form-group">
-        <label for="statusCondition">Status Condition:</label>
-        <select id="statusCondition" formControlName="statusCondition" class="form-control">
-          <option *ngFor="let status of statusConditions" [value]="status.value">
-            {{ status.label }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Pokemon Level -->
-      <div class="form-group">
-        <label for="pokemonLevel">Pokémon Level:</label>
-        <input type="number" id="pokemonLevel" formControlName="pokemonLevel" 
-               min="1" max="100" class="form-control">
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
 
     <!-- HP Section -->
-    <div class="hp-section">
-      <h3>HP Settings</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="maxHp">Max HP:</label>
-          <input type="number" id="maxHp" formControlName="maxHp" 
-                 min="1" class="form-control">
+    <mat-card class="hp-section">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>favorite</mat-icon>
+          HP Settings
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Max HP</mat-label>
+            <input matInput type="number" formControlName="maxHp" min="1">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Current HP</mat-label>
+            <input matInput type="number" formControlName="currentHp" 
+                   min="1" [max]="calculatorForm.get('maxHp')?.value">
+          </mat-form-field>
         </div>
-        <div class="form-group">
-          <label for="currentHp">Current HP:</label>
-          <input type="number" id="currentHp" formControlName="currentHp" 
-                 min="1" [max]="calculatorForm.get('maxHp')?.value" class="form-control">
+        
+        <!-- HP Percentage Buttons -->
+        <div class="hp-buttons">
+          <button mat-raised-button 
+                  type="button" 
+                  *ngFor="let percent of [100, 75, 50, 25, 10, 1]" 
+                  [color]="isHpPercentActive(percent) ? 'accent' : 'primary'"
+                  [class.active]="isHpPercentActive(percent)"
+                  (click)="onHpPercentChange(percent)">
+            {{ percent }}%
+          </button>
         </div>
-      </div>
-      
-      <!-- HP Percentage Buttons -->
-      <div class="hp-buttons">
-        <button type="button" *ngFor="let percent of [100, 75, 50, 25, 10, 1]" 
-                class="hp-btn" 
-                [class.active]="isHpPercentActive(percent)"
-                (click)="onHpPercentChange(percent)">
-          {{ percent }}%
-        </button>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
 
     <!-- Additional Options -->
-    <div class="additional-options">
-      <h3>Additional Modifiers</h3>
-      <div class="checkbox-group">
-        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isCriticalCapture')">
-          <input type="checkbox" formControlName="isCriticalCapture">
-          Critical Capture (Gen 5+)
-        </label>
-        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isFirstTurn')">
-          <input type="checkbox" formControlName="isFirstTurn">
-          First Turn (affects Quick Ball, Timer Ball)
-        </label>
-        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isDarkGrass')">
-          <input type="checkbox" formControlName="isDarkGrass">
-          Dark/Cave/Night Environment (affects Dusk Ball)
-        </label>
-      </div>
-      
-      <!-- Campos específicos para pokéballs -->
-      <div class="ball-specific-fields">
-        <!-- Repeat Ball -->
-        <div class="form-group" *ngIf="shouldShowBallSpecificField('hasBeenCaughtBefore')">
-          <label class="checkbox-label">
-            <input type="checkbox" formControlName="hasBeenCaughtBefore">
-            This species has been caught before (Repeat Ball)
-          </label>
+    <mat-card class="additional-options">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>tune</mat-icon>
+          Additional Modifiers
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="checkbox-group">
+          <mat-checkbox 
+            *ngIf="shouldShowAdditionalModifier('isCriticalCapture')"
+            formControlName="isCriticalCapture"
+            [@checkboxAnimation]
+            matTooltip="Critical Capture increases catch rate significantly">
+            Critical Capture (Gen 5+)
+          </mat-checkbox>
+          <mat-checkbox 
+            *ngIf="shouldShowAdditionalModifier('isFirstTurn')"
+            formControlName="isFirstTurn"
+            [@checkboxAnimation]
+            matTooltip="First turn affects Quick Ball and Timer Ball effectiveness">
+            First Turn (affects Quick Ball, Timer Ball)
+          </mat-checkbox>
+          <mat-checkbox 
+            *ngIf="shouldShowAdditionalModifier('isDarkGrass')"
+            formControlName="isDarkGrass"
+            [@checkboxAnimation]
+            matTooltip="Dark environments boost Dusk Ball effectiveness">
+            Dark/Cave/Night Environment (affects Dusk Ball)
+          </mat-checkbox>
         </div>
+        
+        <!-- Campos específicos para pokéballs -->
+        <div class="ball-specific-fields">
+          <!-- Repeat Ball -->
+          <div class="form-group" *ngIf="shouldShowBallSpecificField('hasBeenCaughtBefore')">
+            <mat-checkbox formControlName="hasBeenCaughtBefore">
+              This species has been caught before (Repeat Ball)
+            </mat-checkbox>
+          </div>
 
-        <!-- Love Ball -->
-        <div class="gender-fields" *ngIf="shouldShowBallSpecificField('genderFields')">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="playerGender">Your Gender:</label>
-              <select id="playerGender" formControlName="playerGender" class="form-control">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="targetGender">Target Pokémon Gender:</label>
-              <select id="targetGender" formControlName="targetGender" class="form-control">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="genderless">Genderless</option>
-              </select>
+          <!-- Love Ball -->
+          <div class="gender-fields" *ngIf="shouldShowBallSpecificField('genderFields')">
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Your Gender</mat-label>
+                <mat-select formControlName="playerGender">
+                  <mat-option value="male">Male</mat-option>
+                  <mat-option value="female">Female</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Target Pokémon Gender</mat-label>
+                <mat-select formControlName="targetGender">
+                  <mat-option value="male">Male</mat-option>
+                  <mat-option value="female">Female</mat-option>
+                  <mat-option value="genderless">Genderless</mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
-        </div>
 
-        <!-- Dive Ball -->
-        <div class="form-group" *ngIf="shouldShowBallSpecificField('isUnderwater')">
-          <label class="checkbox-label">
-            <input type="checkbox" formControlName="isUnderwater">
-            Battle is underwater (Dive Ball)
-          </label>
-        </div>
+          <!-- Dive Ball -->
+          <div class="form-group" *ngIf="shouldShowBallSpecificField('isUnderwater')">
+            <mat-checkbox formControlName="isUnderwater">
+              Battle is underwater (Dive Ball)
+            </mat-checkbox>
+          </div>
 
-        <!-- Lure Ball -->
-        <div class="form-group" *ngIf="shouldShowBallSpecificField('isFishing')">
-          <label class="checkbox-label">
-            <input type="checkbox" formControlName="isFishing">
-            Pokémon was encountered while fishing (Lure Ball)
-          </label>
-        </div>
+          <!-- Lure Ball -->
+          <div class="form-group" *ngIf="shouldShowBallSpecificField('isFishing')">
+            <mat-checkbox formControlName="isFishing">
+              Pokémon was encountered while fishing (Lure Ball)
+            </mat-checkbox>
+          </div>
 
-        <!-- Level Ball -->
-        <div class="form-group" *ngIf="shouldShowBallSpecificField('playerLevel')">
-          <label for="playerLevel">Your Pokémon's Level (Level Ball):</label>
-          <input type="number" id="playerLevel" formControlName="playerLevel" 
-                 min="1" max="100" class="form-control">
-        </div>
+          <!-- Level Ball -->
+          <div class="form-group" *ngIf="shouldShowBallSpecificField('playerLevel')">
+            <mat-form-field appearance="outline">
+              <mat-label>Your Pokémon's Level (Level Ball)</mat-label>
+              <input matInput type="number" formControlName="playerLevel" min="1" max="100">
+            </mat-form-field>
+          </div>
 
-        <!-- Timer Ball -->
-        <div class="form-group" *ngIf="shouldShowBallSpecificField('turnsPassed')">
-          <label for="turnsPassed">Turns Passed (Timer Ball):</label>
-          <input type="number" id="turnsPassed" formControlName="turnsPassed" 
-                 min="1" max="30" class="form-control">
-          <small class="form-text">Timer Ball effectiveness increases with turns (max at turn 10 for Gen 5+, turn 30 for Gen 3-4)</small>
-        </div>
+          <!-- Timer Ball -->
+          <div class="form-group" *ngIf="shouldShowBallSpecificField('turnsPassed')">
+            <mat-form-field appearance="outline">
+              <mat-label>Turns Passed (Timer Ball)</mat-label>
+              <input matInput type="number" formControlName="turnsPassed" min="1" max="30">
+              <mat-hint>Timer Ball effectiveness increases with turns (max at turn 10 for Gen 5+, turn 30 for Gen 3-4)</mat-hint>
+            </mat-form-field>
+          </div>
 
-        <!-- Generation 8 Specific Fields -->
-        <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen8Fields')">
-          <h5>Generation VIII Specific</h5>
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" formControlName="isMaxRaid">
+          <!-- Generation 8 Specific Fields -->
+          <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen8Fields')">
+            <h5>Generation VIII Specific</h5>
+            <mat-checkbox formControlName="isMaxRaid">
               Max Raid Battle (different difficulty mechanics)
-            </label>
+            </mat-checkbox>
           </div>
-        </div>
 
-        <!-- Generation 9 Specific Fields -->
-        <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen9Fields')">
-          <h5>Generation IX Specific</h5>
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" formControlName="isStaticEncounter">
+          <!-- Generation 9 Specific Fields -->
+          <div class="gen-specific-fields" *ngIf="shouldShowBallSpecificField('gen9Fields')">
+            <h5>Generation IX Specific</h5>
+            <mat-checkbox formControlName="isStaticEncounter">
               Static Encounter (bonus multiplier)
-            </label>
-          </div>
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" formControlName="isBackStrike">
+            </mat-checkbox>
+            <mat-checkbox formControlName="isBackStrike">
               Back Strike (bonus multiplier)
-            </label>
+            </mat-checkbox>
           </div>
         </div>
-      </div>
 
-      <!-- Informações sobre o Pokémon selecionado -->
-      <div class="pokemon-details" *ngIf="selectedPokemon">
-        <h4>Pokémon Details:</h4>
-        <div class="detail-row">
-          <span class="detail-label">Types:</span>
-          <span class="detail-value">{{ selectedPokemon.types.join(', ') | titlecase }}</span>
+        <!-- Informações sobre o Pokémon selecionado -->
+        <div class="pokemon-details" *ngIf="selectedPokemon">
+          <h4>Pokémon Details:</h4>
+          <div class="detail-row">
+            <span class="detail-label">Types:</span>
+            <span class="detail-value">{{ selectedPokemon.types.join(', ') | titlecase }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Weight:</span>
+            <span class="detail-value">{{ (selectedPokemon.weight / 10).toFixed(1) }} kg</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Speed:</span>
+            <span class="detail-value">{{ selectedPokemon.stats.speed }}</span>
+          </div>
+          <div class="detail-row" *ngIf="selectedPokemon.isUltraBeast">
+            <span class="detail-label">Special:</span>
+            <span class="detail-value ultra-beast">Ultra Beast</span>
+          </div>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">Weight:</span>
-          <span class="detail-value">{{ (selectedPokemon.weight / 10).toFixed(1) }} kg</span>
+        
+        <div class="form-group" *ngIf="shouldShowAdditionalModifier('badgeCount')">
+          <mat-form-field appearance="outline">
+            <mat-label>Badge Count (affects Gen 8+ calculations)</mat-label>
+            <input matInput type="number" formControlName="badgeCount" min="0" max="8">
+            <mat-hint>Higher level Pokémon are harder to catch without sufficient badges</mat-hint>
+          </mat-form-field>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">Speed:</span>
-          <span class="detail-value">{{ selectedPokemon.stats.speed }}</span>
-        </div>
-        <div class="detail-row" *ngIf="selectedPokemon.isUltraBeast">
-          <span class="detail-label">Special:</span>
-          <span class="detail-value ultra-beast">Ultra Beast</span>
-        </div>
-      </div>
-      
-      <div class="form-group" *ngIf="shouldShowAdditionalModifier('badgeCount')">
-        <label for="badgeCount">Badge Count (affects Gen 8+ calculations):</label>
-        <input type="number" id="badgeCount" formControlName="badgeCount" 
-               min="0" max="8" class="form-control">
-        <small class="form-text">Higher level Pokémon are harder to catch without sufficient badges</small>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </form>
 
   <!-- Results -->
-  <div class="results" *ngIf="result && selectedPokemon">
-    <h2>Catch Rate Results</h2>
-    
-    <div class="result-card">
-      <div class="probability-display">
-        <div class="probability-circle" [style.color]="getProbabilityColor(result.probability)">
-          <span class="percentage">{{ result.probability.toFixed(2) }}%</span>
-          <span class="label">Success Rate</span>
+  <mat-card class="results" *ngIf="result && selectedPokemon" [@slideIn]>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>analytics</mat-icon>
+        Catch Rate Results
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="result-card">
+        <div class="probability-display">
+          <div class="progress-circle-container">
+            <svg class="progress-circle" width="160" height="160" viewBox="0 0 160 160">
+              <!-- Background circle -->
+              <circle
+                cx="80"
+                cy="80"
+                r="65"
+                fill="none"
+                stroke="#e0e0e0"
+                stroke-width="8"
+                [ngStyle]="getProgressBackgroundStyle()">
+              </circle>
+              <!-- Progress circle -->
+              <circle
+                cx="80"
+                cy="80"
+                r="65"
+                fill="none"
+                stroke-width="8"
+                stroke-linecap="round"
+                transform="rotate(-90 80 80)"
+                [ngStyle]="getProgressCircleStyle(result.probability)"
+                [@progressAnimation]>
+              </circle>
+            </svg>
+            <div class="percentage-text" [style.color]="getProbabilityColor(result.probability)">
+              <span class="percentage">{{ result.probability.toFixed(2) }}%</span>
+              <span class="label">Success Rate</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="result-details">
+          <div class="detail-item">
+            <span class="label">Poké Ball Used:</span>
+            <span class="value ball-used">
+              <img [src]="getSelectedBallIcon()" 
+                   [alt]="calculatorForm.get('ballType')?.value" 
+                   class="result-ball-icon"
+                   *ngIf="getSelectedBallIcon()">
+              {{ getSelectedBallLabel() }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Modified Catch Rate:</span>
+            <span class="value">{{ result.catchRate }}</span>
+          </div>
+          <div class="detail-item formula-item">
+            <span class="label">Formula Used:</span>
+            <span class="value formula-text">{{ result.formula }}</span>
+          </div>
+          <div class="detail-item" *ngIf="result.shakeChecks.length > 0">
+            <span class="label">Shake Checks:</span>
+            <span class="value">{{ result.shakeChecks.length }} required</span>
+          </div>
         </div>
       </div>
-      
-      <div class="result-details">
-        <div class="detail-item">
-          <span class="label">Poké Ball Used:</span>
-          <span class="value ball-used">
-            <img [src]="getSelectedBallIcon()" 
-                 [alt]="calculatorForm.get('ballType')?.value" 
-                 class="result-ball-icon"
-                 *ngIf="getSelectedBallIcon()">
-            {{ getSelectedBallLabel() }}
-          </span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Modified Catch Rate:</span>
-          <span class="value">{{ result.catchRate }}</span>
-        </div>
-        <div class="detail-item formula-item">
-          <span class="label">Formula Used:</span>
-          <span class="value formula-text">{{ result.formula }}</span>
-        </div>
-        <div class="detail-item" *ngIf="result.shakeChecks.length > 0">
-          <span class="label">Shake Checks:</span>
-          <span class="value">{{ result.shakeChecks.length }} required</span>
-        </div>
-      </div>
-    </div>
+    </mat-card-content>
 
     <!-- Probability Interpretation -->
-    <div class="interpretation">
-      <h3>What this means:</h3>
-      <p *ngIf="result.probability >= 90" class="success">
-        Excellent! Very high chance of success.
-      </p>
-      <p *ngIf="result.probability >= 70 && result.probability < 90" class="good">
-        Good chance of catching this Pokémon.
-      </p>
-      <p *ngIf="result.probability >= 50 && result.probability < 70" class="moderate">
-        Moderate chance - you might need a few attempts.
-      </p>
-      <p *ngIf="result.probability >= 30 && result.probability < 50" class="low">
-        Low chance - consider weakening the Pokémon more or using a better ball.
-      </p>
-      <p *ngIf="result.probability < 30" class="very-low">
-        Very low chance - try using status conditions, better balls, or weaken further.
-      </p>
-    </div>
-  </div>
+    <mat-card class="interpretation" [@fadeIn]>
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>lightbulb</mat-icon>
+          What this means:
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="result.probability >= 90" class="success">
+          <mat-icon>check_circle</mat-icon>
+          Excellent! Very high chance of success.
+        </p>
+        <p *ngIf="result.probability >= 70 && result.probability < 90" class="good">
+          <mat-icon>thumb_up</mat-icon>
+          Good chance of catching this Pokémon.
+        </p>
+        <p *ngIf="result.probability >= 50 && result.probability < 70" class="moderate">
+          <mat-icon>help</mat-icon>
+          Moderate chance - you might need a few attempts.
+        </p>
+        <p *ngIf="result.probability >= 30 && result.probability < 50" class="low">
+          <mat-icon>warning</mat-icon>
+          Low chance - consider weakening the Pokémon more or using a better ball.
+        </p>
+        <p *ngIf="result.probability < 30" class="very-low">
+          <mat-icon>error</mat-icon>
+          Very low chance - try using status conditions, better balls, or weaken further.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </mat-card>
 
-  <div class="loading" *ngIf="isLoading">
-    Loading Pokémon data...
+  <div class="loading" *ngIf="isLoading" [@fadeIn]>
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading Pokémon data...</p>
   </div>
-
 
 </div>
