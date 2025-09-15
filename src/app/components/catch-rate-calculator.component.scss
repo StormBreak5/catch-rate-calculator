@@ -1,0 +1,416 @@
+.calculator-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+  }
+}
+
+.calculator-form {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #34495e;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pokemon-suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .suggestions-header {
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+
+  .suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    text-transform: capitalize;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .no-results {
+    padding: 12px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+  }
+}
+
+.pokemon-details {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border: 1px solid #e0e0e0;
+
+  h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+
+    .detail-label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    .detail-value {
+      color: #7f8c8d;
+      
+      &.ultra-beast {
+        color: #e74c3c;
+        font-weight: 600;
+        background: #ffeaa7;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.selected-pokemon {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .pokemon-image {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+    object-fit: contain;
+  }
+
+  .pokemon-info {
+    h3 {
+      margin: 0 0 10px 0;
+      color: #2c3e50;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin: 0;
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.hp-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+
+  h3 {
+    margin-top: 0;
+    color: #e74c3c;
+  }
+}
+
+.hp-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+
+  .hp-btn {
+    padding: 8px 16px;
+    border: 2px solid #e74c3c;
+    background: white;
+    color: #e74c3c;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+
+    &:hover, &.active {
+      background: #e74c3c;
+      color: white;
+    }
+  }
+}
+
+.additional-options {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+
+  h3 {
+    margin-top: 0;
+    color: #9b59b6;
+  }
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+  }
+}
+
+.results {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+  }
+}
+
+.result-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 25px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.probability-display {
+  display: flex;
+  justify-content: center;
+
+  .probability-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 8px solid currentColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+
+    .percentage {
+      font-size: 2rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+  }
+}
+
+.result-details {
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    .value {
+      color: #7f8c8d;
+      font-family: monospace;
+    }
+
+    &.formula-item {
+      align-items: flex-start;
+      
+      .formula-text {
+        max-width: 60%;
+        word-wrap: break-word;
+        text-align: right;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+.interpretation {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+
+  h3 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+
+    &.success { color: #27ae60; }
+    &.good { color: #2ecc71; }
+    &.moderate { color: #f39c12; }
+    &.low { color: #e67e22; }
+    &.very-low { color: #e74c3c; }
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.ball-specific-fields {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .gender-fields {
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #856404;
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.1);
+    }
+  }
+
+  label:not(.checkbox-label) {
+    color: #856404;
+    font-weight: 600;
+  }
+
+  .form-control {
+    border-color: #ffeaa7;
+    
+    &:focus {
+      border-color: #f39c12;
+      box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+    }
+  }
+
+  .form-text {
+    font-size: 0.875rem;
+    color: #856404;
+    margin-top: 5px;
+    font-style: italic;
+    line-height: 1.3;
+  }
+}

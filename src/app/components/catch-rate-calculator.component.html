@@ -1,0 +1,276 @@
+<div class="calculator-container">
+  <h1>Pokémon Catch Rate Calculator</h1>
+  
+  <form [formGroup]="calculatorForm" class="calculator-form">
+    <!-- Pokemon Selection -->
+    <div class="form-group">
+      <label for="pokemonName">Select Pokémon:</label>
+      <input 
+        type="text" 
+        id="pokemonName"
+        formControlName="pokemonName"
+        placeholder="Type Pokémon name..."
+        class="form-control"
+        (input)="selectedPokemon = null; result = null; showSuggestions = true"
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()">
+      
+      <div class="pokemon-suggestions" *ngIf="showSuggestions && (filteredPokemon$ | async) as suggestions">
+        <div class="suggestions-header" *ngIf="suggestions.length > 0">
+          Mostrando {{ suggestions.length }} Pokémon
+        </div>
+        <div 
+          *ngFor="let pokemon of suggestions" 
+          class="suggestion-item"
+          (click)="onPokemonSelect(pokemon.name); calculatorForm.patchValue({pokemonName: pokemon.name})">
+          {{ pokemon.name | titlecase }}
+        </div>
+        <div class="no-results" *ngIf="suggestions.length === 0 && calculatorForm.get('pokemonName')?.value">
+          Nenhum Pokémon encontrado
+        </div>
+      </div>
+    </div>
+
+    <!-- Selected Pokemon Display -->
+    <div class="selected-pokemon" *ngIf="selectedPokemon">
+      <img [src]="selectedPokemon.sprites.other['official-artwork'].front_default || selectedPokemon.sprites.front_default" 
+           [alt]="selectedPokemon.name" class="pokemon-image">
+      <div class="pokemon-info">
+        <h3>{{ selectedPokemon.name | titlecase }}</h3>
+        <p>Base Catch Rate: {{ selectedPokemon.captureRate }}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <!-- Generation -->
+      <div class="form-group">
+        <label for="generation">Game Generation:</label>
+        <select id="generation" formControlName="generation" class="form-control">
+          <option *ngFor="let gen of generations" [value]="gen.value">
+            {{ gen.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Ball Type -->
+      <div class="form-group">
+        <label for="ballType">Poké Ball:</label>
+        <select id="ballType" formControlName="ballType" class="form-control">
+          <option *ngFor="let ball of pokeballs" [value]="ball.value">
+            {{ ball.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <!-- Status Condition -->
+      <div class="form-group">
+        <label for="statusCondition">Status Condition:</label>
+        <select id="statusCondition" formControlName="statusCondition" class="form-control">
+          <option *ngFor="let status of statusConditions" [value]="status.value">
+            {{ status.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pokemon Level -->
+      <div class="form-group">
+        <label for="pokemonLevel">Pokémon Level:</label>
+        <input type="number" id="pokemonLevel" formControlName="pokemonLevel" 
+               min="1" max="100" class="form-control">
+      </div>
+    </div>
+
+    <!-- HP Section -->
+    <div class="hp-section">
+      <h3>HP Settings</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="maxHp">Max HP:</label>
+          <input type="number" id="maxHp" formControlName="maxHp" 
+                 min="1" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="currentHp">Current HP:</label>
+          <input type="number" id="currentHp" formControlName="currentHp" 
+                 min="1" [max]="calculatorForm.get('maxHp')?.value" class="form-control">
+        </div>
+      </div>
+      
+      <!-- HP Percentage Buttons -->
+      <div class="hp-buttons">
+        <button type="button" *ngFor="let percent of [100, 75, 50, 25, 10, 1]" 
+                class="hp-btn" 
+                [class.active]="isHpPercentActive(percent)"
+                (click)="onHpPercentChange(percent)">
+          {{ percent }}%
+        </button>
+      </div>
+    </div>
+
+    <!-- Additional Options -->
+    <div class="additional-options">
+      <h3>Additional Modifiers</h3>
+      <div class="checkbox-group">
+        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isCriticalCapture')">
+          <input type="checkbox" formControlName="isCriticalCapture">
+          Critical Capture (Gen 5+)
+        </label>
+        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isFirstTurn')">
+          <input type="checkbox" formControlName="isFirstTurn">
+          First Turn (affects Quick Ball, Timer Ball)
+        </label>
+        <label class="checkbox-label" *ngIf="shouldShowAdditionalModifier('isDarkGrass')">
+          <input type="checkbox" formControlName="isDarkGrass">
+          Dark/Cave/Night Environment (affects Dusk Ball)
+        </label>
+      </div>
+      
+      <!-- Campos específicos para pokéballs -->
+      <div class="ball-specific-fields">
+        <!-- Repeat Ball -->
+        <div class="form-group" *ngIf="shouldShowBallSpecificField('hasBeenCaughtBefore')">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="hasBeenCaughtBefore">
+            This species has been caught before (Repeat Ball)
+          </label>
+        </div>
+
+        <!-- Love Ball -->
+        <div class="gender-fields" *ngIf="shouldShowBallSpecificField('genderFields')">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="playerGender">Your Gender:</label>
+              <select id="playerGender" formControlName="playerGender" class="form-control">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="targetGender">Target Pokémon Gender:</label>
+              <select id="targetGender" formControlName="targetGender" class="form-control">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="genderless">Genderless</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dive Ball -->
+        <div class="form-group" *ngIf="shouldShowBallSpecificField('isUnderwater')">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isUnderwater">
+            Battle is underwater (Dive Ball)
+          </label>
+        </div>
+
+        <!-- Lure Ball -->
+        <div class="form-group" *ngIf="shouldShowBallSpecificField('isFishing')">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isFishing">
+            Pokémon was encountered while fishing (Lure Ball)
+          </label>
+        </div>
+
+        <!-- Level Ball -->
+        <div class="form-group" *ngIf="shouldShowBallSpecificField('playerLevel')">
+          <label for="playerLevel">Your Pokémon's Level (Level Ball):</label>
+          <input type="number" id="playerLevel" formControlName="playerLevel" 
+                 min="1" max="100" class="form-control">
+        </div>
+
+        <!-- Timer Ball -->
+        <div class="form-group" *ngIf="shouldShowBallSpecificField('turnsPassed')">
+          <label for="turnsPassed">Turns Passed (Timer Ball):</label>
+          <input type="number" id="turnsPassed" formControlName="turnsPassed" 
+                 min="1" max="30" class="form-control">
+          <small class="form-text">Timer Ball effectiveness increases with turns (max at turn 10 for Gen 5+, turn 30 for Gen 3-4)</small>
+        </div>
+      </div>
+
+      <!-- Informações sobre o Pokémon selecionado -->
+      <div class="pokemon-details" *ngIf="selectedPokemon">
+        <h4>Pokémon Details:</h4>
+        <div class="detail-row">
+          <span class="detail-label">Types:</span>
+          <span class="detail-value">{{ selectedPokemon.types.join(', ') | titlecase }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Weight:</span>
+          <span class="detail-value">{{ (selectedPokemon.weight / 10).toFixed(1) }} kg</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Speed:</span>
+          <span class="detail-value">{{ selectedPokemon.stats.speed }}</span>
+        </div>
+        <div class="detail-row" *ngIf="selectedPokemon.isUltraBeast">
+          <span class="detail-label">Special:</span>
+          <span class="detail-value ultra-beast">Ultra Beast</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="badgeCount">Badge Count (affects some calculations):</label>
+        <input type="number" id="badgeCount" formControlName="badgeCount" 
+               min="0" max="8" class="form-control">
+      </div>
+    </div>
+  </form>
+
+  <!-- Results -->
+  <div class="results" *ngIf="result && selectedPokemon">
+    <h2>Catch Rate Results</h2>
+    
+    <div class="result-card">
+      <div class="probability-display">
+        <div class="probability-circle" [style.color]="getProbabilityColor(result.probability)">
+          <span class="percentage">{{ result.probability.toFixed(2) }}%</span>
+          <span class="label">Success Rate</span>
+        </div>
+      </div>
+      
+      <div class="result-details">
+        <div class="detail-item">
+          <span class="label">Modified Catch Rate:</span>
+          <span class="value">{{ result.catchRate }}</span>
+        </div>
+        <div class="detail-item formula-item">
+          <span class="label">Formula Used:</span>
+          <span class="value formula-text">{{ result.formula }}</span>
+        </div>
+        <div class="detail-item" *ngIf="result.shakeChecks.length > 0">
+          <span class="label">Shake Checks:</span>
+          <span class="value">{{ result.shakeChecks.length }} required</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Probability Interpretation -->
+    <div class="interpretation">
+      <h3>What this means:</h3>
+      <p *ngIf="result.probability >= 90" class="success">
+        Excellent! Very high chance of success.
+      </p>
+      <p *ngIf="result.probability >= 70 && result.probability < 90" class="good">
+        Good chance of catching this Pokémon.
+      </p>
+      <p *ngIf="result.probability >= 50 && result.probability < 70" class="moderate">
+        Moderate chance - you might need a few attempts.
+      </p>
+      <p *ngIf="result.probability >= 30 && result.probability < 50" class="low">
+        Low chance - consider weakening the Pokémon more or using a better ball.
+      </p>
+      <p *ngIf="result.probability < 30" class="very-low">
+        Very low chance - try using status conditions, better balls, or weaken further.
+      </p>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    Loading Pokémon data...
+  </div>
+
+
+</div>
