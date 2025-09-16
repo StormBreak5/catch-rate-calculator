@@ -1,27 +1,71 @@
-# CatchRateCalculator
+# Pokémon Catch Rate Calculator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.4.
+A comprehensive Angular application that calculates the probability of successfully catching Pokémon across all generations. This tool helps trainers optimize their catching strategies by considering various factors like Pokéball type, Pokémon status conditions, HP levels, and generation-specific mechanics.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Multi-Generation Support**: Accurate calculations for Generations I through IX
+- **Comprehensive Pokéball Database**: Support for 26+ different Pokéball types with unique modifiers
+- **Real-time Calculations**: Dynamic updates as you adjust parameters
+- **Pokémon Search**: Autocomplete search powered by PokéAPI
+- **Visual Feedback**: Animated progress indicators and color-coded probability displays
+- **Advanced Modifiers**:
+  - Status conditions (Sleep, Paralysis, Burn, etc.)
+  - HP percentage sliders
+  - Generation-specific features (Max Raids, Static Encounters)
+  - Pokéball-specific conditions (Timer Ball turns, Love Ball gender matching)
 
-## Code scaffolding
+## Getting Started
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Prerequisites
 
-## Build
+- Node.js (v14 or higher)
+- Angular CLI
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Installation
 
-## Running unit tests
+```bash
+npm install
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Development Server
 
-## Running end-to-end tests
+```bash
+ng serve
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Navigate to `http://localhost:4200/` to use the calculator.
 
-## Further help
+### Build for Production
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+ng build
+```
+
+Build artifacts will be stored in the `dist/` directory.
+
+## How to Use
+
+1. **Select a Pokémon**: Start typing a Pokémon name in the search field
+2. **Choose Generation**: Select the game generation you're playing
+3. **Pick Your Pokéball**: Choose from the extensive list of available Pokéballs
+4. **Set Conditions**: Adjust HP, status conditions, and other modifiers
+5. **View Results**: See real-time catch rate calculations with visual indicators
+
+## Technical Stack
+
+- **Framework**: Angular 14
+- **UI Components**: Angular Material
+- **Animations**: Angular Animations API
+- **Data Source**: PokéAPI
+- **Styling**: SCSS with custom animations
+
+## Testing
+
+```bash
+ng test
+```
+
+## Contributing
+
+Feel free to submit issues and enhancement requests!
